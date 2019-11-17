@@ -1,0 +1,23 @@
+CREATE TABLE `carparks` (
+    `id` int(11) AUTO_INCREMENT NOT NULL,
+    `car_park_no` varchar(10) NOT NULL,
+    `address` text NOT NULL,
+    `x_coord` double NOT NULL,
+    `y_coord` double NOT NULL,
+    `latitude` double NOT NULL,
+    `longitude` double NOT NULL,
+    `car_park_type` varchar(255) DEFAULT NULL,
+    `type_of_parking_system` varchar(255) DEFAULT NULL,
+    `short_term_parking` varchar(255) DEFAULT NULL,
+    `free_parking` varchar(255) DEFAULT NULL,
+    `night_parking` bool DEFAULT 0,
+    `car_park_decks` tinyint(1) DEFAULT 1,
+    `gantry_height` float DEFAULT NULL,
+    `car_park_basement` bool DEFAULT 0,
+    `distance_from_center` float NOT NULL,
+    `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY `uq_idx_car_park_no` (`car_park_no`),
+    INDEX `idx_distance_from_center` (`distance_from_center`)
+);

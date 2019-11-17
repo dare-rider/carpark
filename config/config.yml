@@ -1,0 +1,8 @@
+db:
+  dsn: root:@tcp(127.0.0.1:3306)/carpark_dev?parseTime=true
+  migration_path: "file://db/migrations/schema" # Relative
+  seed_path: "db/migrations/seed" # Relative
+gov_sg_service:
+  base_url: "https://api.data.gov.sg/"
+misc:
+  environment: "development"
