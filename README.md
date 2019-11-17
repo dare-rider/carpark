@@ -5,7 +5,7 @@
     <pre>
     go get github.com/dare-rider/carpark
     cd $GOPATH/src/github.com/dare-rider/carpark
-    ** update db `dsn` in `config/config.yml`
+    ** update db `dsn` in `config/config.yml` as per your local
     go build
         (All dependencies are within repo, under `vendor` dir)
     ./carpark 
@@ -15,12 +15,23 @@
     <pre>
     git clone https://github.com/dare-rider/carpark.git
     cd carpark
-    ** update db `dsn` in `config/config.yml`
+    ** update db `dsn` in `config/config.yml` as per your local
     go build
         (All dependencies are within repo, under `vendor` dir)
     ./carpark 
         (Server started at port 3005, check `localhost:3005/ping` to verify)
     </pre>
+    
+## Docker Setup
+Make sure to `git clone` the repo as mentioned above
+<pre>
+cd carpark
+** Default `dsn` in `config/config.yml` is as per docker 
+** If changed? Revert back to `dockeruser:dockeruser@tcp(mysqldb:3306)/cp_dev?parseTime=true`
+docker-compose up -d --build mysqldb
+docker-compose up --build app 
+    (Server started at port 3005, check `localhost:3005/ping` to verify)
+</pre>
 
 ## Application Architecture
 
