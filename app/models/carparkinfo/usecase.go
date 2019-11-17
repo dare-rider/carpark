@@ -26,5 +26,8 @@ func (uc *usecase) InsertOrUpdateByCarParkNo(mod *Model, tx ...*sqlx.Tx) error {
 }
 
 func (uc *usecase) FindAllByCarparkIDs(cpIds []int) ([]Model, error) {
+	if len(cpIds) == 0 {
+		return nil, nil
+	}
 	return uc.rp.FindAllByCarparkIDs(cpIds)
 }

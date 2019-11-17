@@ -1,5 +1,27 @@
 # Carpark
 
+## Setup
+* Using `go get`
+    <pre>
+    go get github.com/dare-rider/carpark
+    cd $GOPATH/src/github.com/dare-rider/carpark
+    ** update db `dsn` in `config/config.yml`
+    go build
+        (All dependencies are within repo, under `vendor` dir)
+    ./carpark 
+        (Server started at port 3005, check `localhost:3005/ping` to verify)
+    </pre>
+* Using `git clone`, as we are using `go mod` we can clone this package anywhere, not necessarily under $GOPATH/src
+    <pre>
+    git clone https://github.com/dare-rider/carpark.git
+    cd carpark
+    ** update db `dsn` in `config/config.yml`
+    go build
+        (All dependencies are within repo, under `vendor` dir)
+    ./carpark 
+        (Server started at port 3005, check `localhost:3005/ping` to verify)
+    </pre>
+
 ## Application Architecture
 
 The application architecture is mostly inclined towards `The Clean Architecture`, 
@@ -167,5 +189,13 @@ Will discuss about it in following section.
     }
     </pre>
     * Default pagination - page: 1, per_page: 50
-
+    
+ ### Unit Test coverage
+   * used `stretchr/testify` for assertion & generating mocks using `mockery` CLI tool
+   * packages covered  `extservices`, `models`, `tasks`
+   * test case can be found under `test` directory in respective package
+   * Run test case, from application root directory 
+   <pre>
+   go test -v ./...
+   </pre>
   
