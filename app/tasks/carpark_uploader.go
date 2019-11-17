@@ -38,6 +38,7 @@ const (
 )
 
 func (upldr *carparkUploader) Upload() error {
+
 	filePath := utils.JoinURL(upldr.csvFileBasePath, carparkFileName)
 	csvFile, err := os.Open(filePath)
 	if err != nil {

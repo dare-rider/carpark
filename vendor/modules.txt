@@ -1,3 +1,8 @@
+# github.com/bxcodec/faker v2.0.1+incompatible
+github.com/bxcodec/faker
+github.com/bxcodec/faker/support/slice
+# github.com/davecgh/go-spew v1.1.1
+github.com/davecgh/go-spew/spew
 # github.com/fsnotify/fsnotify v1.4.7
 github.com/fsnotify/fsnotify
 # github.com/go-chi/chi v4.0.2+incompatible
@@ -37,11 +42,14 @@ github.com/jmoiron/sqlx/reflectx
 # github.com/leodido/go-urn v1.1.0
 github.com/leodido/go-urn
 # github.com/magiconair/properties v1.8.1
+github.com/magiconair/properties/assert
 github.com/magiconair/properties
 # github.com/mitchellh/mapstructure v1.1.2
 github.com/mitchellh/mapstructure
 # github.com/pelletier/go-toml v1.2.0
 github.com/pelletier/go-toml
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
 # github.com/spf13/afero v1.1.2
 github.com/spf13/afero
 github.com/spf13/afero/mem
@@ -53,6 +61,13 @@ github.com/spf13/jwalterweatherman
 github.com/spf13/pflag
 # github.com/spf13/viper v1.5.0
 github.com/spf13/viper
+# github.com/stretchr/objx v0.1.1
+github.com/stretchr/objx
+# github.com/stretchr/testify v1.3.0
+github.com/stretchr/testify/mock
+github.com/stretchr/testify/assert
+github.com/stretchr/testify/require
+github.com/stretchr/testify/suite
 # github.com/subosito/gotenv v1.2.0
 github.com/subosito/gotenv
 # golang.org/x/sys v0.0.0-20190507160741-ecd444e8653b
