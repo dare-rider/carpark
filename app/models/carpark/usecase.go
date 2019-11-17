@@ -12,29 +12,30 @@ import (
 type Usecase interface {
 	InsertOrUpdate(mod *Model, tx ...*sqlx.Tx) error
 	FetchNearestWithInfo(req *requests.NearestCarparksRequest) ([]Model, error)
+	LimitOffset(pgNo int, perPg int) (limit int, offset int)
 }
 
 type usecase struct {
 	models.BaseUsecase
-	rp            repoI
+	rp            RepoI
 	carparkInfoUc carparkinfo.Usecase
 }
 
-func NewUsecase(db *sqlx.DB, carparkInfoUc carparkinfo.Usecase) Usecase {
+func NewUsecase(rp RepoI, carparkInfoUc carparkinfo.Usecase) Usecase {
 	return &usecase{
-		rp:            newRepo(db),
+		rp:            rp,
 		carparkInfoUc: carparkInfoUc,
 	}
 }
 
 func (uc *usecase) InsertOrUpdate(mod *Model, tx ...*sqlx.Tx) error {
-	return uc.rp.insertOrUpdate(mod, tx...)
+	return uc.rp.InsertOrUpdate(mod, tx...)
 }
 
 func (uc *usecase) FetchNearestWithInfo(req *requests.NearestCarparksRequest) ([]Model, error) {
 	currentDistFromCenter := geodist.Distance(req.Latitude, req.Longitude, constant.GeoDistSgLat, constant.GeoDistSgLong, constant.GeoDistUnit)
 	limit, offset := uc.LimitOffset(req.Page, req.PerPage)
-	cps, err := uc.rp.fetchNearest(currentDistFromCenter, limit, offset)
+	cps, err := uc.rp.FetchNearest(currentDistFromCenter, limit, offset)
 	if err != nil {
 		return nil, err
 	}

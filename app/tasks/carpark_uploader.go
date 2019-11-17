@@ -21,7 +21,7 @@ type carparkUploader struct {
 }
 
 type CarparkUploader interface {
-	Upload()
+	Upload() error
 }
 
 func NewCarparkUploader(carparkUc carpark.Usecase, csvFileBasePath string) CarparkUploader {
@@ -37,14 +37,18 @@ const (
 	carparkUploadBatchSize = 100
 )
 
-func (upldr *carparkUploader) Upload() {
+func (upldr *carparkUploader) Upload() error {
 	filePath := utils.JoinURL(upldr.csvFileBasePath, carparkFileName)
 	csvFile, err := os.Open(filePath)
-	utils.HandleError(err)
+	if err != nil {
+		return err
+	}
 	reader := csv.NewReader(csvFile)
 	defer csvFile.Close()
 	allRecords, err := reader.ReadAll()
-	utils.HandleError(err)
+	if err != nil {
+		return err
+	}
 
 	// initiating sync wait group
 	wg := new(sync.WaitGroup)
@@ -66,6 +70,7 @@ func (upldr *carparkUploader) Upload() {
 		}(allRecords[start:end])
 	}
 	wg.Wait()
+	return nil
 }
 
 func (upldr *carparkUploader) addCarpark(line []string) error {

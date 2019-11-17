@@ -12,19 +12,19 @@ type Usecase interface {
 
 type usecase struct {
 	models.BaseUsecase
-	rp repoI
+	rp RepoI
 }
 
-func NewUsecase(db *sqlx.DB) Usecase {
+func NewUsecase(rp RepoI) Usecase {
 	return &usecase{
-		rp: newRepo(db),
+		rp: rp,
 	}
 }
 
 func (uc *usecase) InsertOrUpdateByCarParkNo(mod *Model, tx ...*sqlx.Tx) error {
-	return uc.rp.insertOrUpdateByCarParkNo(mod, tx...)
+	return uc.rp.InsertOrUpdateByCarParkNo(mod, tx...)
 }
 
 func (uc *usecase) FindAllByCarparkIDs(cpIds []int) ([]Model, error) {
-	return uc.rp.findAllByCarparkIDs(cpIds)
+	return uc.rp.FindAllByCarparkIDs(cpIds)
 }

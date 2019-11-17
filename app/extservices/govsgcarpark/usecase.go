@@ -2,26 +2,25 @@ package govsgcarpark
 
 import (
 	"github.com/dare-rider/carpark/app/models/carparkinfo"
-	"net/http"
 	"strconv"
 )
 
 type usecase struct {
-	rp repoI
+	rp RepoI
 }
 
 type Usecase interface {
 	CarparkInfos() ([]carparkinfo.Model, error)
 }
 
-func NewUsecase(baseUrl string, client *http.Client) Usecase {
+func NewUsecase(rp RepoI) Usecase {
 	return &usecase{
-		rp: newRepo(baseUrl, client),
+		rp: rp,
 	}
 }
 
 func (uc *usecase) CarparkInfos() ([]carparkinfo.Model, error) {
-	rawResp, err := uc.rp.carparkAvaialability()
+	rawResp, err := uc.rp.CarparkAvailability()
 	if err != nil {
 		return nil, err
 	}

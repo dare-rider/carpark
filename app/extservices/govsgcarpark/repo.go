@@ -16,7 +16,7 @@ type errResp struct {
 	Message string `json:"message"`
 }
 
-type successResp struct {
+type SuccessResp struct {
 	ApiInfo *apiInfo `json:"api_info"`
 	Items   []item   `json:"items"`
 }
@@ -47,18 +47,18 @@ type repo struct {
 	client  *http.Client
 }
 
-type repoI interface {
-	carparkAvaialability() (*successResp, error)
+type RepoI interface {
+	CarparkAvailability() (*SuccessResp, error)
 }
 
-func newRepo(baseUrl string, client *http.Client) repoI {
+func NewRepo(baseUrl string, client *http.Client) RepoI {
 	return &repo{
 		baseURL: baseUrl,
 		client:  client,
 	}
 }
 
-func (rp *repo) carparkAvaialability() (*successResp, error) {
+func (rp *repo) CarparkAvailability() (*SuccessResp, error) {
 	req, err := http.NewRequest(http.MethodGet, rp.carparkAvailabilitylURL(), nil)
 	if err != nil {
 		return nil, errors.New(constant.InvalidRequest)
@@ -84,7 +84,7 @@ func (rp *repo) carparkAvaialability() (*successResp, error) {
 		}
 		return nil, errors.New(errResp.Message)
 	}
-	var response successResp
+	var response SuccessResp
 	err = json.NewDecoder(bytes.NewReader(resBody)).Decode(&response)
 	if err != nil {
 		return nil, err

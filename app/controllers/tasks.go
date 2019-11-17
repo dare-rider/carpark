@@ -29,7 +29,11 @@ func (ctrl *taskController) Router(r chi.Router) {
 }
 
 func (ctrl *taskController) carparkUpload(w http.ResponseWriter, r *http.Request) {
-	ctrl.carparkUploader.Upload()
+	err := ctrl.carparkUploader.Upload()
+	if err != nil {
+		ctrl.base.WriteErrorJSONWithStatus(w, http.StatusUnprocessableEntity, err)
+		return
+	}
 	ctrl.base.DefaultSuccessResponse(w)
 }
 

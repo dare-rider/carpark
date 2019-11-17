@@ -37,22 +37,22 @@ const (
 	`
 )
 
-type repoI interface {
-	insertOrUpdateByCarParkNo(mod *Model, tx ...*sqlx.Tx) error
-	findAllByCarparkIDs(cpIds []int) ([]Model, error)
+type RepoI interface {
+	InsertOrUpdateByCarParkNo(mod *Model, tx ...*sqlx.Tx) error
+	FindAllByCarparkIDs(cpIds []int) ([]Model, error)
 }
 
 type repo struct {
 	models.BaseRepo
 }
 
-func newRepo(db *sqlx.DB) repoI {
+func NewRepo(db *sqlx.DB) RepoI {
 	rp := &repo{}
 	rp.Db = db
 	return rp
 }
 
-func (rp *repo) insertOrUpdateByCarParkNo(mod *Model, tx ...*sqlx.Tx) error {
+func (rp *repo) InsertOrUpdateByCarParkNo(mod *Model, tx ...*sqlx.Tx) error {
 	db := rp.DbOrTx(tx...)
 	rows, err := db.NamedQuery(insertOrUpdateByCarParkNoQuery, mod)
 	if err != nil {
@@ -62,7 +62,7 @@ func (rp *repo) insertOrUpdateByCarParkNo(mod *Model, tx ...*sqlx.Tx) error {
 	return nil
 }
 
-func (rp *repo) findAllByCarparkIDs(cpIds []int) ([]Model, error) {
+func (rp *repo) FindAllByCarparkIDs(cpIds []int) ([]Model, error) {
 	preparedBlanks := strings.TrimRight(strings.Repeat("?,", len(cpIds)), ",")
 	query := fmt.Sprintf(selectAllByCarparkIdsQuery, preparedBlanks)
 	var res []Model

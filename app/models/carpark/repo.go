@@ -63,22 +63,22 @@ const (
 	`
 )
 
-type repoI interface {
-	insertOrUpdate(mod *Model, tx ...*sqlx.Tx) error
-	fetchNearest(currentDist float64, limit int, offset int) ([]Model, error)
+type RepoI interface {
+	InsertOrUpdate(mod *Model, tx ...*sqlx.Tx) error
+	FetchNearest(currentDist float64, limit int, offset int) ([]Model, error)
 }
 
 type repo struct {
 	models.BaseRepo
 }
 
-func newRepo(db *sqlx.DB) repoI {
+func NewRepo(db *sqlx.DB) RepoI {
 	rp := &repo{}
 	rp.Db = db
 	return rp
 }
 
-func (rp *repo) insertOrUpdate(mod *Model, tx ...*sqlx.Tx) error {
+func (rp *repo) InsertOrUpdate(mod *Model, tx ...*sqlx.Tx) error {
 	db := rp.DbOrTx(tx...)
 	rows, err := db.NamedQuery(insertOrUpdateQuery, mod)
 	if err != nil {
@@ -88,7 +88,7 @@ func (rp *repo) insertOrUpdate(mod *Model, tx ...*sqlx.Tx) error {
 	return nil
 }
 
-func (rp *repo) fetchNearest(currentDist float64, limit int, offset int) ([]Model, error) {
+func (rp *repo) FetchNearest(currentDist float64, limit int, offset int) ([]Model, error) {
 	var results []Model
 	err := rp.Db.Select(&results, fetchNearest, currentDist, limit, offset)
 	if err != nil {

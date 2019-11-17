@@ -29,10 +29,13 @@ func InitRoutes(config *config.GeneralConfig, db *sqlx.DB) *chi.Mux {
 	}).Handler)
 	// prepare controller routes
 	vldtor := validator.New()
-	govSgCarparkUc := govsgcarpark.NewUsecase(config.GovSgService.BaseUrl, &http.Client{Timeout: constant.DefaultHttpTimeout * time.Second})
+	govSgCarparkRp := govsgcarpark.NewRepo(config.GovSgService.BaseUrl, &http.Client{Timeout: constant.DefaultHttpTimeout * time.Second})
+	carparkInfoRp := carparkinfo.NewRepo(db)
+	carparkRp := carpark.NewRepo(db)
 
-	carparkInfoUc := carparkinfo.NewUsecase(db)
-	carparkUc := carpark.NewUsecase(db, carparkInfoUc)
+	govSgCarparkUc := govsgcarpark.NewUsecase(govSgCarparkRp)
+	carparkInfoUc := carparkinfo.NewUsecase(carparkInfoRp)
+	carparkUc := carpark.NewUsecase(carparkRp, carparkInfoUc)
 
 	cpInfoUploader := tasks.NewCarparkInfoUploader(govSgCarparkUc, carparkInfoUc)
 	cpUploader := tasks.NewCarparkUploader(carparkUc, config.DbConfig.SeedPath)
