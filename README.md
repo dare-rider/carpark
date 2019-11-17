@@ -209,4 +209,10 @@ Will discuss about it in following section.
    <pre>
    go test -v ./...
    </pre>
+   
+ ### Performance checkpoints
+   * mysql indexes, wherever required
+   * golang sync waitgroups to provide parallelism
+   * avoided (n+1) query
+   * prepared statements
   
