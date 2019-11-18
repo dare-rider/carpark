@@ -1,0 +1,1 @@
+ALTER TABLE `carparks` DROP INDEX `uq_idx_car_park_no`, DROP COLUMN `distance_from_center`;

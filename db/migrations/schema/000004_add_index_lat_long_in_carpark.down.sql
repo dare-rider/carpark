@@ -1,0 +1,1 @@
+ALTER TABLE `carparks` DROP INDEX `idx_lat_long`;

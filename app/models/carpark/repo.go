@@ -1,6 +1,7 @@
 package carpark
 
 import (
+	"fmt"
 	"github.com/dare-rider/carpark/app/models"
 	"github.com/dare-rider/carpark/app/models/carparkinfo"
 	"github.com/jmoiron/sqlx"
@@ -22,7 +23,6 @@ type Model struct {
 	CarParkDecks        int     `db:"car_park_decks"`
 	GantryHeight        float64 `db:"gantry_height"`
 	CarParkBasement     bool    `db:"car_park_basement"`
-	DistanceFromCenter  float64 `db:"distance_from_center"`
 	// Non DB field
 	DistanceFromCurrentLocation float64 `db:"distance_from_current_location"`
 	CarparkInfos                []carparkinfo.Model
@@ -32,12 +32,10 @@ const (
 	insertOrUpdateQuery = `
 		INSERT into carparks
 			(car_park_no, address, x_coord, y_coord, car_park_type, type_of_parking_system, short_term_parking,
-				free_parking, night_parking, car_park_decks, gantry_height, car_park_basement, distance_from_center,
-				latitude, longitude)
+				free_parking, night_parking, car_park_decks, gantry_height, car_park_basement, latitude, longitude)
 		VALUES
 			(:car_park_no, :address, :x_coord, :y_coord, :car_park_type, :type_of_parking_system, :short_term_parking,
-				:free_parking, :night_parking, :car_park_decks, :gantry_height, :car_park_basement, :distance_from_center,
-				:latitude, :longitude)
+				:free_parking, :night_parking, :car_park_decks, :gantry_height, :car_park_basement, :latitude, :longitude)
 		ON DUPLICATE KEY UPDATE
 			address = :address,
 			car_park_type = :car_park_type,
@@ -49,23 +47,39 @@ const (
 			gantry_height = :gantry_height,
 			car_park_basement = :car_park_basement
 	`
+)
 
-	fetchNearest = `
+var (
+	// param 0 - current latitude
+	// param 1 - current longitude
+	// param 2 - current latitude
+	twoPtDistanceQuery = `
+		111.111 * DEGREES(
+            ACOS(LEAST(
+                  1.0,
+                  COS(RADIANS(?)) * COS(RADIANS(latitude)) * COS(RADIANS(? - longitude))
+                  + SIN(RADIANS(?)) * SIN(RADIANS(latitude)))
+                )
+          )
+	`
+	// param 0 - limit
+	// param 1 - offset
+	fetchNearest = fmt.Sprintf(`
 		SELECT
-			ABS(distance_from_center - ?) as distance_from_current_location, id, car_park_no, address, x_coord, y_coord, car_park_type,
+			%s as distance_from_current_location, id, car_park_no, address, x_coord, y_coord, car_park_type,
 			type_of_parking_system, short_term_parking, free_parking, night_parking, car_park_decks, gantry_height, car_park_basement,
-			distance_from_center, latitude, longitude
+			latitude, longitude
 		FROM
 			carparks
 		ORDER BY
 			distance_from_current_location
 		LIMIT ? OFFSET ?
-	`
+	`, twoPtDistanceQuery)
 )
 
 type RepoI interface {
 	InsertOrUpdate(mod *Model, tx ...*sqlx.Tx) error
-	FetchNearest(currentDist float64, limit int, offset int) ([]Model, error)
+	FetchNearest(currentLat float64, currentLong float64, limit int, offset int) ([]Model, error)
 }
 
 type repo struct {
@@ -88,9 +102,9 @@ func (rp *repo) InsertOrUpdate(mod *Model, tx ...*sqlx.Tx) error {
 	return nil
 }
 
-func (rp *repo) FetchNearest(currentDist float64, limit int, offset int) ([]Model, error) {
+func (rp *repo) FetchNearest(currentLat float64, currentLong float64, limit int, offset int) ([]Model, error) {
 	var results []Model
-	err := rp.Db.Select(&results, fetchNearest, currentDist, limit, offset)
+	err := rp.Db.Select(&results, fetchNearest, currentLat, currentLong, currentLat, limit, offset)
 	if err != nil {
 		return nil, err
 	}

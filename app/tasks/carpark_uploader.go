@@ -7,7 +7,6 @@ import (
 	"github.com/dare-rider/carpark/app/models/carpark"
 	"github.com/dare-rider/carpark/constant"
 	"github.com/dare-rider/carpark/utils"
-	"github.com/dare-rider/carpark/utils/geodist"
 	"github.com/dare-rider/carpark/utils/svy21"
 	"log"
 	"os"
@@ -93,8 +92,6 @@ func (upldr *carparkUploader) addCarpark(line []string) error {
 	cpMod.Latitude, cpMod.Longitude = svy21.ToLatLon(cpMod.XCoord, cpMod.YCoord)
 	cpMod.CarParkDecks, _ = strconv.Atoi(line[9])
 	cpMod.GantryHeight, _ = strconv.ParseFloat(line[10], 64)
-	cpMod.DistanceFromCenter = geodist.Distance(cpMod.Latitude, cpMod.Longitude,
-		constant.GeoDistSgLat, constant.GeoDistSgLong, constant.GeoDistUnit)
 
 	err := upldr.carparkUc.InsertOrUpdate(&cpMod)
 	return err

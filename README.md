@@ -149,15 +149,6 @@ Will discuss about it in following section.
     }
     </pre>
  *  GET `/carparks/nearest` to fetch the carparks sorted based on distance from input location. 
-    * Algo: While uploading carparks, their distance in `KMs` from a central SG location is also populated in DB along with lat, long.
-      While fetching the nearest carpark from a location L1, L1 distance is calculated from central SG location, and then sorted based 
-      on absolute difference from the carpark distance from central SG location
-    <pre>
-    L0 - central SG location
-    L0CP1, L0CP2 .... L0CPn - distance of carpark location from L0 in KMs
-    L1 - current location
-    Comparator: L0L1 <=> L0CPi 
-    </pre>
     * Query Parameters
     <pre>
        Latitude  float64 `schema:"latitude" validate:"required"`

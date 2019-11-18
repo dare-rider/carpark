@@ -4,8 +4,6 @@ import (
 	"github.com/dare-rider/carpark/app/models"
 	"github.com/dare-rider/carpark/app/models/carparkinfo"
 	"github.com/dare-rider/carpark/app/requests"
-	"github.com/dare-rider/carpark/constant"
-	"github.com/dare-rider/carpark/utils/geodist"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -33,9 +31,8 @@ func (uc *usecase) InsertOrUpdate(mod *Model, tx ...*sqlx.Tx) error {
 }
 
 func (uc *usecase) FetchNearestWithInfo(req *requests.NearestCarparksRequest) ([]Model, error) {
-	currentDistFromCenter := geodist.Distance(req.Latitude, req.Longitude, constant.GeoDistSgLat, constant.GeoDistSgLong, constant.GeoDistUnit)
 	limit, offset := uc.LimitOffset(req.Page, req.PerPage)
-	cps, err := uc.rp.FetchNearest(currentDistFromCenter, limit, offset)
+	cps, err := uc.rp.FetchNearest(req.Latitude, req.Longitude, limit, offset)
 	if err != nil {
 		return nil, err
 	}

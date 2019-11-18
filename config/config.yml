@@ -1,6 +1,7 @@
 db:
 #  dsn: <user>:<pass>@tcp(<host>:<port>)/<database>?parseTime=true
-  dsn: dockeruser:dockeruser@tcp(mysqldb:3306)/cp_dev?parseTime=true
+#  dsn: dockeruser:dockeruser@tcp(mysqldb:3306)/cp_dev?parseTime=true
+  dsn: root:@tcp(127.0.0.1:3306)/carpark_dev?parseTime=true
   migration_path: "file://db/migrations/schema" # Relative
   seed_path: "db/migrations/seed" # Relative
 gov_sg_service:

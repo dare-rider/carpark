@@ -8,8 +8,6 @@ import (
 	"github.com/dare-rider/carpark/app/models/carparkinfo"
 	cpInfoMocks "github.com/dare-rider/carpark/app/models/carparkinfo/mocks"
 	"github.com/dare-rider/carpark/app/requests"
-	"github.com/dare-rider/carpark/constant"
-	"github.com/dare-rider/carpark/utils/geodist"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -67,9 +65,8 @@ func (suite *UsecaseTestSuite) TestFetchNearestWithInfo() {
 		uc := carpark.NewUsecase(suite.rp, suite.carparkInfoUc)
 		expectedErr := errors.New("test-error")
 
-		dist := geodist.Distance(suite.fakeNearestCarparksRequest.Latitude, suite.fakeNearestCarparksRequest.Longitude, constant.GeoDistSgLat, constant.GeoDistSgLong, constant.GeoDistUnit)
 		limit, offset := uc.LimitOffset(suite.fakeNearestCarparksRequest.Page, suite.fakeNearestCarparksRequest.PerPage)
-		suite.rp.On("FetchNearest", dist, limit, offset).Return(nil, expectedErr)
+		suite.rp.On("FetchNearest", suite.fakeNearestCarparksRequest.Latitude, suite.fakeNearestCarparksRequest.Longitude, limit, offset).Return(nil, expectedErr)
 
 		cpIds := []int{2, 3, 4, 5}
 		suite.carparkInfoUc.On("FindAllByCarparkIDs", cpIds).Return(suite.fakeCarparkInfoMod, nil)
@@ -83,9 +80,8 @@ func (suite *UsecaseTestSuite) TestFetchNearestWithInfo() {
 		uc := carpark.NewUsecase(suite.rp, suite.carparkInfoUc)
 		expectedErr := errors.New("test-error")
 
-		dist := geodist.Distance(suite.fakeNearestCarparksRequest.Latitude, suite.fakeNearestCarparksRequest.Longitude, constant.GeoDistSgLat, constant.GeoDistSgLong, constant.GeoDistUnit)
 		limit, offset := uc.LimitOffset(suite.fakeNearestCarparksRequest.Page, suite.fakeNearestCarparksRequest.PerPage)
-		suite.rp.On("FetchNearest", dist, limit, offset).Return([]carpark.Model{*suite.fakeCarparkMod}, nil)
+		suite.rp.On("FetchNearest", suite.fakeNearestCarparksRequest.Latitude, suite.fakeNearestCarparksRequest.Longitude, limit, offset).Return([]carpark.Model{*suite.fakeCarparkMod}, nil)
 
 		cpIds := []int{suite.fakeCarparkMod.ID}
 		suite.carparkInfoUc.On("FindAllByCarparkIDs", cpIds).Return(nil, expectedErr)
@@ -98,9 +94,8 @@ func (suite *UsecaseTestSuite) TestFetchNearestWithInfo() {
 		suite.SetupTest()
 		uc := carpark.NewUsecase(suite.rp, suite.carparkInfoUc)
 
-		dist := geodist.Distance(suite.fakeNearestCarparksRequest.Latitude, suite.fakeNearestCarparksRequest.Longitude, constant.GeoDistSgLat, constant.GeoDistSgLong, constant.GeoDistUnit)
 		limit, offset := uc.LimitOffset(suite.fakeNearestCarparksRequest.Page, suite.fakeNearestCarparksRequest.PerPage)
-		suite.rp.On("FetchNearest", dist, limit, offset).Return([]carpark.Model{*suite.fakeCarparkMod}, nil)
+		suite.rp.On("FetchNearest", suite.fakeNearestCarparksRequest.Latitude, suite.fakeNearestCarparksRequest.Longitude, limit, offset).Return([]carpark.Model{*suite.fakeCarparkMod}, nil)
 
 		cpIds := []int{suite.fakeCarparkMod.ID}
 		suite.carparkInfoUc.On("FindAllByCarparkIDs", cpIds).Return([]carparkinfo.Model{*suite.fakeCarparkInfoMod}, nil)

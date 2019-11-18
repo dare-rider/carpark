@@ -1,0 +1,1 @@
+ALTER TABLE `carparks` ADD INDEX `idx_lat_long` (`latitude`, `longitude`);
